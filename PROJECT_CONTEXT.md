@@ -1,12 +1,12 @@
 # Project Context: Portfolio Gibran Studio
 
 ## Ringkasan Project
-Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel yang menampilkan profil personal, karya portfolio, halaman kontak, karakter 3D interaktif, dan panel AI Assistant sederhana. Project ini berfokus pada tampilan editorial, visual minimalis, serta pengalaman interaktif menggunakan Blade, Vite, Tailwind CSS, dan Three.js.
+Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fotografer. Website ini menampilkan profil fotografer, seri foto, halaman detail portfolio, halaman kontak, visual interaktif, dan panel Profile Assistant sederhana. Project ini berfokus pada nuansa editorial, komposisi visual minimalis, dan narasi fotografi.
 
 ## Identitas
 - Nama project: Portfolio Gibran Studio
-- Jenis aplikasi: Website portfolio personal
-- Target pengguna: Pengunjung portfolio, calon klien, dosen, atau reviewer project
+- Jenis aplikasi: Website portfolio fotografi personal
+- Target pengguna: Calon klien fotografi, art director, brand, editor, dosen, atau reviewer project
 - Bahasa utama UI: Indonesia dan Inggris
 
 ## Stack Teknologi
@@ -30,13 +30,14 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel yang mena
 ## Fitur Saat Ini
 1. Halaman About
    - Menampilkan hero profile.
-   - Menampilkan karakter 3D yang dapat diputar.
-   - Menampilkan deskripsi filosofi dan fokus karya.
+   - Menampilkan visual interaktif.
+   - Menampilkan filosofi fotografi dan fokus karya.
 
 2. Halaman Portfolio
-   - Menampilkan daftar project visual.
+   - Menampilkan daftar seri foto.
    - Data project masih disimpan sebagai array di `routes/web.php`.
-   - Setiap project memiliki title, category, image, dan layout wide/non-wide.
+   - Setiap project memiliki title, slug, category, image, description, client, year, tools, images, dan link.
+   - Setiap card mengarah ke halaman detail portfolio.
 
 3. Halaman Contact
    - Menampilkan email, social link, dan availability.
@@ -48,14 +49,17 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel yang mena
    - Panel mengambil data JSON dari endpoint `/profile/ai-insight`.
    - Insight masih berupa response lokal berbasis data profile statis.
 
-5. Karakter 3D
-   - Dibangun langsung dengan Three.js.
-   - Objek terdiri dari kombinasi geometry seperti sphere, capsule, dan torus.
+5. Halaman Detail Portfolio
+   - Menampilkan hero image, informasi client, tahun, production/tools, cerita seri, gallery, dan prev/next navigation.
+
+6. Visual Interaktif
+   - Dibangun dengan Three.js.
    - Bisa berotasi otomatis dan diputar manual dengan pointer drag.
 
 ## Route Aktif
 - `GET /`: Halaman About.
 - `GET /portfolio`: Halaman Portfolio.
+- `GET /portfolio/{slug}`: Halaman detail portfolio berdasarkan slug.
 - `GET /contact`: Halaman Contact.
 - `GET /profile/ai-insight`: Endpoint JSON untuk AI Assistant panel.
 
@@ -105,4 +109,4 @@ http://127.0.0.1:8000
 ```
 
 ## Ringkasan Untuk Prompt AI
-Project ini adalah Laravel 12 portfolio website bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan Three.js. Aplikasi memiliki halaman About, Portfolio, Contact, karakter 3D interaktif, dan panel AI Assistant lokal melalui endpoint `/profile/ai-insight`. Data profile dan project masih hardcoded di `routes/web.php`, sehingga aplikasi belum mendukung CRUD. Pengembangan berikutnya adalah membuat model, migration, controller, route resource, dan view admin untuk mengelola data portfolio secara dinamis.
+Project ini adalah Laravel 12 portfolio fotografi bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan visual interaktif Three.js. Aplikasi memiliki halaman About, Portfolio, Detail Portfolio, Contact, dan panel Profile Assistant lokal melalui endpoint `/profile/ai-insight`. Data profile dan project masih hardcoded di `routes/web.php`, sehingga aplikasi belum mendukung CRUD. Pengembangan berikutnya adalah membuat model, migration, controller, route resource, dan dashboard admin untuk mengelola seri foto secara dinamis.

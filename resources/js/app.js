@@ -120,8 +120,8 @@ const loadProfileInsight = async () => {
         aiSuggestion.textContent = insight.suggestion;
     } catch {
         aiSource.textContent = 'Local fallback';
-        aiSummary.textContent = 'Profile siap tampil sebagai creative developer dengan sentuhan 3D.';
-        aiSuggestion.textContent = 'Cek koneksi dev server jika insight Laravel gagal dimuat.';
+        aiSummary.textContent = 'Profile siap tampil sebagai photographer dengan bahasa visual editorial.';
+        aiSuggestion.textContent = 'Cek koneksi dev server jika insight studio gagal dimuat.';
     }
 };
 

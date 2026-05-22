@@ -6,7 +6,7 @@
 - **Kelas:** Isi kelas kamu
 
 ## Deskripsi
-Project Laravel portfolio editorial dengan halaman About, Portfolio, Contact, panel AI Assistant berbasis Laravel Boost, dan karakter 3D rotasi memakai Three.js.
+Project Laravel portfolio fotografi editorial dengan halaman About, Portfolio, Contact, detail portfolio, panel profile assistant, dan visual interaktif.
 
 ## Stack
 - Laravel 12, versi terbaru yang kompatibel dengan PHP 8.2 lokal
