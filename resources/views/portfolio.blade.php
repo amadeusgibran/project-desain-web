@@ -52,7 +52,7 @@
 
                 <section class="section-band">
                     @php
-                        $featuredProject = $projects[0];
+                        $featuredProject = $projects->first();
                     @endphp
 
                     <div class="container about-grid">
@@ -73,28 +73,30 @@
                         </p>
                     </div>
 
-                    <div class="container featured-project">
-                        <div class="featured-copy">
-                            <span class="eyebrow">Latest Project</span>
-                            <h2>{{ $featuredProject['title'] }}</h2>
-                            <p>
-                                Seri foto terbaru yang mengeksplorasi cahaya, ruang, dan gesture visual dengan
-                                komposisi minimal serta tone editorial.
-                            </p>
-                            <a class="portfolio-button" href="{{ route('portfolio') }}">See Portfolio</a>
-                        </div>
+                    @if ($featuredProject)
+                        <div class="container featured-project">
+                            <div class="featured-copy">
+                                <span class="eyebrow">Latest Project</span>
+                                <h2>{{ $featuredProject->title }}</h2>
+                                <p>
+                                    Seri foto terbaru yang mengeksplorasi cahaya, ruang, dan gesture visual dengan
+                                    komposisi minimal serta tone editorial.
+                                </p>
+                                <a class="portfolio-button" href="{{ route('portfolio') }}">See Portfolio</a>
+                            </div>
 
-                        <article class="featured-card">
-                            <div class="featured-media">
-                                <img src="{{ asset('images/'.$featuredProject['image']) }}" alt="{{ $featuredProject['title'] }}">
-                                <span class="pill">{{ $featuredProject['category'] }}</span>
-                            </div>
-                            <div class="featured-title-row">
-                                <h3>{{ strtoupper($featuredProject['title']) }}</h3>
-                                <a class="detail-link" href="{{ route('portfolio.detail', $featuredProject['slug']) }}">View Detail</a>
-                            </div>
-                        </article>
-                    </div>
+                            <article class="featured-card">
+                                <div class="featured-media">
+                                    <img src="{{ $featuredProject->cover_image_url }}" alt="{{ $featuredProject->title }}">
+                                    <span class="pill">{{ $featuredProject->category }}</span>
+                                </div>
+                                <div class="featured-title-row">
+                                    <h3>{{ strtoupper($featuredProject->title) }}</h3>
+                                    <a class="detail-link" href="{{ route('portfolio.detail', $featuredProject->slug) }}">View Detail</a>
+                                </div>
+                            </article>
+                        </div>
+                    @endif
                 </section>
             @elseif ($page === 'portfolio')
                 <section class="portfolio-hero container">
@@ -115,15 +117,15 @@
 
                 <section class="work-grid container">
                     @foreach ($projects as $project)
-                        <a class="work-card group" href="{{ route('portfolio.detail', $project['slug']) }}" data-category="{{ $project['category'] }}">
+                        <a class="work-card group" href="{{ route('portfolio.detail', $project->slug) }}" data-category="{{ $project->category }}">
                             <div class="work-media">
-                                <img src="{{ asset('images/'.$project['image']) }}" alt="{{ $project['title'] }}">
+                                <img src="{{ $project->cover_image_url }}" alt="{{ $project->title }}">
                                 <div class="work-overlay">
-                                    <span class="pill">{{ $project['category'] }}</span>
+                                    <span class="pill">{{ $project->category }}</span>
                                 </div>
                             </div>
                             <div class="work-title-row">
-                                <h2>{{ strtoupper($project['title']) }}</h2>
+                                <h2>{{ strtoupper($project->title) }}</h2>
                                 <span class="detail-link">View Detail</span>
                             </div>
                         </a>

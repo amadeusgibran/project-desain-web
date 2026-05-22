@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $project['title'] }} | {{ $profile['name'] }}</title>
+    <title>{{ $project->title }} | {{ $profile['name'] }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -40,29 +40,29 @@
             <section class="detail-hero container">
                 <a class="back-link" href="{{ route('portfolio') }}">&larr; Back to portfolio</a>
                 <div class="detail-hero-copy">
-                    <span class="eyebrow">{{ $project['category'] }}</span>
-                    <h1>{{ $project['title'] }}</h1>
+                    <span class="eyebrow">{{ $project->category }}</span>
+                    <h1>{{ $project->title }}</h1>
                 </div>
             </section>
 
             <section class="detail-hero-media">
-                <img src="{{ asset('images/'.$project['image']) }}" alt="{{ $project['title'] }}">
+                <img src="{{ $project->cover_image_url }}" alt="{{ $project->title }}">
             </section>
 
             <section class="detail-content container">
                 <aside class="detail-meta" aria-label="Project information">
                     <div>
                         <span class="meta-label">Client</span>
-                        <strong>{{ $project['client'] }}</strong>
+                        <strong>{{ $project->client }}</strong>
                     </div>
                     <div>
                         <span class="meta-label">Year</span>
-                        <strong>{{ $project['year'] }}</strong>
+                        <strong>{{ $project->year }}</strong>
                     </div>
                     <div>
                         <span class="meta-label">Production</span>
                         <div class="tool-list">
-                            @foreach ($project['tools'] as $tool)
+                            @foreach ($project->tools ?? [] as $tool)
                                 <span class="pill">{{ $tool }}</span>
                             @endforeach
                         </div>
@@ -71,7 +71,7 @@
 
                 <article class="detail-description">
                     <span class="eyebrow">Series Story</span>
-                    <p>{{ $project['description'] }}</p>
+                    <p>{{ $project->description }}</p>
                     <p>
                         Arah visual dibuat agar mood, subjek, dan detail tetap menjadi pusat perhatian.
                         Pemilihan frame, warna, dan ritme editing menjaga cerita terasa utuh dari foto
@@ -81,27 +81,27 @@
             </section>
 
             <section class="detail-gallery container" aria-label="Project gallery">
-                @foreach ($project['images'] as $image)
+                @foreach ($project->galleryImageUrls() as $image)
                     <figure>
-                        <img src="{{ asset('images/'.$image) }}" alt="{{ $project['title'] }} gallery image">
+                        <img src="{{ $image }}" alt="{{ $project->title }} gallery image">
                     </figure>
                 @endforeach
             </section>
 
             <section class="project-nav container" aria-label="Project navigation">
                 @if ($previousProject)
-                    <a class="project-nav-card" href="{{ route('portfolio.detail', $previousProject['slug']) }}">
+                    <a class="project-nav-card" href="{{ route('portfolio.detail', $previousProject->slug) }}">
                         <span class="meta-label">&larr; Previous</span>
-                        <strong>{{ $previousProject['title'] }}</strong>
+                        <strong>{{ $previousProject->title }}</strong>
                     </a>
                 @else
                     <span></span>
                 @endif
 
                 @if ($nextProject)
-                    <a class="project-nav-card next" href="{{ route('portfolio.detail', $nextProject['slug']) }}">
+                    <a class="project-nav-card next" href="{{ route('portfolio.detail', $nextProject->slug) }}">
                         <span class="meta-label">Next &rarr;</span>
-                        <strong>{{ $nextProject['title'] }}</strong>
+                        <strong>{{ $nextProject->title }}</strong>
                     </a>
                 @endif
             </section>

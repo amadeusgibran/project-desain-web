@@ -25,8 +25,17 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
 npm run build
 php artisan serve
 ```
 
 Buka `http://127.0.0.1:8000`.
+
+## Admin
+- URL: `http://127.0.0.1:8000/admin/login`
+- Email: `admin@example.com`
+- Password: `password`
+- Projects: `/admin/projects`
+- Categories: `/admin/categories`

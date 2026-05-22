@@ -20,7 +20,12 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 - Testing: PHPUnit dan Playwright dependency
 
 ## Struktur Utama
-- `routes/web.php`: Menyimpan route halaman dan data statis profile/project.
+- `routes/web.php`: Menyimpan route publik, route admin auth, dan route CRUD project.
+- `app/Models/Project.php`: Model Eloquent untuk seri foto portfolio.
+- `app/Http/Controllers/ProjectController.php`: CRUD admin untuk project.
+- `app/Http/Controllers/CategoryController.php`: CRUD ringan untuk kategori portfolio.
+- `app/Http/Controllers/AuthController.php`: Login/logout admin manual.
+- `app/Http/Requests`: Validasi form create/update project.
 - `resources/views/portfolio.blade.php`: View utama untuk halaman About, Portfolio, dan Contact.
 - `resources/js/app.js`: Logic karakter 3D, rotasi pointer, dan AI Assistant panel.
 - `resources/css/app.css`: Styling utama seluruh halaman.
@@ -35,7 +40,7 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 
 2. Halaman Portfolio
    - Menampilkan daftar seri foto.
-   - Data project masih disimpan sebagai array di `routes/web.php`.
+   - Data project diambil dari tabel `projects`.
    - Setiap project memiliki title, slug, category, image, description, client, year, tools, images, dan link.
    - Setiap card mengarah ke halaman detail portfolio.
 
@@ -64,33 +69,33 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 - `GET /profile/ai-insight`: Endpoint JSON untuk AI Assistant panel.
 
 ## Status CRUD
-Project ini belum mendukung CRUD penuh. Data profile dan portfolio masih hardcoded di `routes/web.php`, belum berasal dari database. Belum ada model, migration, controller, atau route resource untuk mengelola data portfolio/contact secara dinamis.
+Project ini sudah memiliki CRUD portfolio untuk admin. Data project berasal dari tabel `projects`, dikelola melalui `/admin/projects`, dan dilindungi middleware `auth`.
 
-Untuk mendukung CRUD, project perlu ditambah:
-- Migration tabel, misalnya `projects` atau `contacts`.
-- Model Eloquent, misalnya `Project` atau `ContactMessage`.
-- Controller resource, misalnya `ProjectController`.
-- Route resource untuk create, read, update, dan delete.
-- View form create/edit dan halaman list/detail.
-- Validasi request.
-- Integrasi form dengan route `POST`, `PUT/PATCH`, dan `DELETE`.
+CRUD yang tersedia:
+- Create project dengan cover image dan gallery.
+- Read/list project di dashboard admin.
+- Update metadata, cover image, gallery, status publish, dan urutan.
+- Delete project.
+- Drag-and-drop reorder project memakai SortableJS.
+- Slug project dibuat otomatis dari title.
+- Category dipilih dari dropdown dan dikelola lewat `/admin/categories`.
+- Gallery upload memakai multi-file dropzone dengan preview sebelum submit.
 
 ## Batasan Saat Ini
-- Data profile dan project belum dinamis.
+- Data profile masih hardcoded.
 - Form contact belum menyimpan data.
-- Belum ada autentikasi admin.
-- Belum ada dashboard pengelolaan konten.
+- Dashboard admin baru mengelola portfolio project.
 - Endpoint AI belum memakai provider AI eksternal.
-- Database belum digunakan untuk konten portfolio.
+- CRUD belum mencakup profile, contact message, atau social links.
 
 ## Arah Pengembangan
 Project ini dapat dikembangkan menjadi aplikasi portfolio dinamis dengan panel admin. Tahap pengembangan yang disarankan:
-1. Membuat CRUD portfolio project.
-2. Membuat penyimpanan pesan kontak.
-3. Membuat autentikasi admin.
-4. Memindahkan data profile ke database atau config.
-5. Membuat dashboard untuk mengelola profile, portfolio, dan pesan.
-6. Menghubungkan AI Assistant ke data project yang lebih lengkap.
+1. Membuat penyimpanan pesan kontak.
+2. Memindahkan data profile ke database atau config.
+3. Membuat dashboard untuk mengelola profile dan pesan.
+4. Menambahkan edit category dan proteksi hapus category yang sedang dipakai.
+5. Menambahkan role admin bila user lebih dari satu.
+6. Menghubungkan Profile Assistant ke data project yang lebih lengkap.
 
 ## Cara Menjalankan
 ```bash
@@ -98,6 +103,8 @@ composer install
 npm install
 cp .env.example .env
 php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
 npm run build
 php artisan serve
 ```
@@ -108,5 +115,15 @@ Buka aplikasi di:
 http://127.0.0.1:8000
 ```
 
+Admin:
+
+```text
+http://127.0.0.1:8000/admin/login
+email: admin@example.com
+password: password
+projects: /admin/projects
+categories: /admin/categories
+```
+
 ## Ringkasan Untuk Prompt AI
-Project ini adalah Laravel 12 portfolio fotografi bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan visual interaktif Three.js. Aplikasi memiliki halaman About, Portfolio, Detail Portfolio, Contact, dan panel Profile Assistant lokal melalui endpoint `/profile/ai-insight`. Data profile dan project masih hardcoded di `routes/web.php`, sehingga aplikasi belum mendukung CRUD. Pengembangan berikutnya adalah membuat model, migration, controller, route resource, dan dashboard admin untuk mengelola seri foto secara dinamis.
+Project ini adalah Laravel 12 portfolio fotografi bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan visual interaktif Three.js. Aplikasi memiliki halaman About, Portfolio, Detail Portfolio, Contact, panel Profile Assistant lokal melalui endpoint `/profile/ai-insight`, serta dashboard admin `/admin/projects` untuk CRUD seri foto. Data project berasal dari tabel `projects`; data profile masih hardcoded. Pengembangan berikutnya adalah CRUD profile, penyimpanan pesan kontak, dan role admin.

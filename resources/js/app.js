@@ -154,3 +154,80 @@ if (filterTabs.length && workCards.length) {
         });
     });
 }
+
+const galleryInput = document.querySelector('[data-gallery-input]');
+const galleryPreview = document.querySelector('[data-gallery-preview]');
+const galleryDropzone = galleryInput?.closest('.gallery-dropzone');
+const coverInput = document.querySelector('[data-cover-input]');
+const coverFileName = document.querySelector('[data-cover-file-name]');
+
+if (coverInput && coverFileName) {
+    coverInput.addEventListener('change', () => {
+        coverFileName.textContent = coverInput.files[0]?.name?.toUpperCase() || coverFileName.textContent;
+    });
+}
+
+if (galleryInput && galleryPreview && galleryDropzone) {
+    let selectedGalleryFiles = [];
+
+    const syncGalleryInput = () => {
+        const transfer = new DataTransfer();
+
+        selectedGalleryFiles.forEach((file) => transfer.items.add(file));
+        galleryInput.files = transfer.files;
+    };
+
+    const renderGalleryPreview = () => {
+        galleryPreview.innerHTML = '';
+
+        selectedGalleryFiles.forEach((file, index) => {
+            const figure = document.createElement('figure');
+            const image = document.createElement('img');
+            const caption = document.createElement('figcaption');
+            const removeButton = document.createElement('button');
+
+            image.src = URL.createObjectURL(file);
+            image.alt = file.name;
+            image.onload = () => URL.revokeObjectURL(image.src);
+            caption.textContent = file.name.toUpperCase();
+            removeButton.type = 'button';
+            removeButton.className = 'gallery-remove-button';
+            removeButton.setAttribute('aria-label', `Remove ${file.name}`);
+            removeButton.textContent = '×';
+            removeButton.addEventListener('click', () => {
+                selectedGalleryFiles.splice(index, 1);
+                syncGalleryInput();
+                renderGalleryPreview();
+            });
+
+            figure.append(image, removeButton, caption);
+            galleryPreview.append(figure);
+        });
+    };
+
+    const addGalleryFiles = (files) => {
+        selectedGalleryFiles = [...selectedGalleryFiles, ...[...files]];
+        syncGalleryInput();
+        renderGalleryPreview();
+    };
+
+    galleryInput.addEventListener('change', () => addGalleryFiles(galleryInput.files));
+
+    ['dragenter', 'dragover'].forEach((eventName) => {
+        galleryDropzone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            galleryDropzone.classList.add('is-dragover');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach((eventName) => {
+        galleryDropzone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            galleryDropzone.classList.remove('is-dragover');
+        });
+    });
+
+    galleryDropzone.addEventListener('drop', (event) => {
+        addGalleryFiles(event.dataTransfer.files);
+    });
+}
