@@ -92,15 +92,30 @@
                     <p>Based in {{ $profile['location'] }}, exploring the intersection of code, form, and visual geometry through a minimalist lens.</p>
                 </section>
 
+                @php
+                    $categories = collect($projects)->pluck('category')->unique()->values();
+                @endphp
+
+                <section class="work-filter container" aria-label="Filter portfolio">
+                    <button class="filter-tab active" type="button" data-filter="all">All</button>
+                    @foreach ($categories as $category)
+                        <button class="filter-tab" type="button" data-filter="{{ $category }}">{{ $category }}</button>
+                    @endforeach
+                </section>
+
                 <section class="work-grid container">
-                    @foreach ($projects as $index => $project)
-                        <article class="work-card {{ $project['wide'] ? 'wide' : '' }} {{ $index === 1 ? 'tall' : '' }}">
+                    @foreach ($projects as $project)
+                        <article class="work-card group" data-category="{{ $project['category'] }}">
                             <div class="work-media">
                                 <img src="{{ asset('images/'.$project['image']) }}" alt="{{ $project['title'] }}">
+                                <div class="work-overlay">
+                                    <span class="pill">{{ $project['category'] }}</span>
+                                    <a class="detail-arrow" href="#" aria-label="Lihat detail {{ $project['title'] }}">-></a>
+                                </div>
                             </div>
                             <div class="work-title-row">
                                 <h2>{{ strtoupper($project['title']) }}</h2>
-                                <span class="pill">{{ $project['category'] }}</span>
+                                <a class="detail-link" href="#">View Detail</a>
                             </div>
                         </article>
                     @endforeach

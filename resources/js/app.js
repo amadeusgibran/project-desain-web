@@ -135,3 +135,22 @@ if (aiToggle && aiPanel) {
 if (aiRefresh) {
     aiRefresh.addEventListener('click', loadProfileInsight);
 }
+
+const filterTabs = document.querySelectorAll('[data-filter]');
+const workCards = document.querySelectorAll('[data-category]');
+
+if (filterTabs.length && workCards.length) {
+    filterTabs.forEach((tab) => {
+        tab.addEventListener('click', () => {
+            const filter = tab.dataset.filter;
+
+            filterTabs.forEach((item) => item.classList.remove('active'));
+            tab.classList.add('active');
+
+            workCards.forEach((card) => {
+                const shouldShow = filter === 'all' || card.dataset.category === filter;
+                card.classList.toggle('is-hidden', !shouldShow);
+            });
+        });
+    });
+}

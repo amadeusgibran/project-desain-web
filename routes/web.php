@@ -16,19 +16,16 @@ $projects = [
         'title' => 'Monolith Study',
         'category' => 'Branding',
         'image' => 'portfolio_photography_gallery.png',
-        'wide' => true,
     ],
     [
         'title' => 'Void & Volume',
-        'category' => 'UI Direction',
+        'category' => 'Web',
         'image' => 'contact_details.png',
-        'wide' => false,
     ],
     [
         'title' => 'Helix Series',
-        'category' => 'Photography',
+        'category' => 'Motion',
         'image' => 'about_me_3d_character.png',
-        'wide' => false,
     ],
 ];
 

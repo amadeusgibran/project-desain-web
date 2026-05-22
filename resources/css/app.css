@@ -261,6 +261,7 @@ textarea {
     height: 100%;
     object-fit: cover;
     filter: grayscale(0.15);
+    transition: transform 240ms ease, filter 240ms ease;
 }
 
 .image-chip {
@@ -332,34 +333,126 @@ textarea {
     line-height: 1.55;
 }
 
+.work-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: -54px;
+    margin-bottom: 42px;
+}
+
+.filter-tab {
+    min-height: 40px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.filter-tab:hover,
+.filter-tab.active {
+    border-color: var(--green);
+    background: var(--green);
+    color: white;
+    transform: translateY(-1px);
+}
+
 .work-grid {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 56px 32px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
     padding-bottom: 120px;
     border-bottom: 1px solid var(--line);
 }
 
 .work-card {
-    grid-column: span 6;
-}
-
-.work-card.wide {
-    grid-column: span 8;
-}
-
-.work-card.tall {
-    margin-top: 96px;
+    transition: opacity 200ms ease, transform 220ms ease;
 }
 
 .work-media {
-    height: 430px;
+    position: relative;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
+    border: 1px solid var(--line);
     background: #e8e8e8;
 }
 
-.work-card.wide .work-media {
-    height: 500px;
+.work-media::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background: linear-gradient(180deg, rgba(23, 25, 24, 0) 24%, rgba(23, 25, 24, 0.82) 100%);
+    opacity: 0;
+    transition: opacity 220ms ease;
+}
+
+.work-card:hover {
+    transform: translateY(-6px);
+}
+
+.work-card:hover .work-media img {
+    transform: scale(1.045);
+}
+
+.work-card:hover .work-media::after,
+.work-card:hover .work-overlay {
+    opacity: 1;
+}
+
+.work-card.is-hidden {
+    display: none;
+}
+
+.work-overlay {
+    position: absolute;
+    inset: auto 18px 18px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.work-card:hover .work-overlay {
+    transform: translateY(0);
+}
+
+.detail-arrow {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.54);
+    border-radius: 999px;
+    color: white;
+    font-size: 18px;
+    font-weight: 800;
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.detail-arrow:hover {
+    background: white;
+    color: var(--green-deep);
+    transform: translateX(2px);
+}
+
+.detail-link {
+    flex: none;
+    color: var(--green-deep);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 .work-title-row {
@@ -373,7 +466,7 @@ textarea {
 .work-title-row h2 {
     margin: 0;
     font-family: var(--serif);
-    font-size: 36px;
+    font-size: clamp(26px, 2.6vw, 34px);
     line-height: 1.1;
 }
 
@@ -387,6 +480,11 @@ textarea {
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+}
+
+.work-overlay .pill {
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--green-deep);
 }
 
 .contact-hero {
@@ -558,6 +656,12 @@ textarea {
     cursor: pointer;
 }
 
+@media (max-width: 1180px) {
+    .work-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 900px) {
     .site-header {
         min-height: auto;
@@ -612,9 +716,7 @@ textarea {
         padding: 72px 0;
     }
 
-    .feature-image,
-    .work-media,
-    .work-card.wide .work-media {
+    .feature-image {
         min-height: 0;
         height: 320px;
     }
@@ -625,13 +727,13 @@ textarea {
     }
 
     .work-grid {
-        display: block;
+        grid-template-columns: 1fr;
+        gap: 42px;
     }
 
-    .work-card,
-    .work-card.wide,
-    .work-card.tall {
-        margin: 0 0 46px;
+    .work-filter {
+        margin-top: -28px;
+        margin-bottom: 32px;
     }
 
     .contact-layout {
