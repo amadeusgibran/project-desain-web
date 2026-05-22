@@ -51,6 +51,10 @@
                 </section>
 
                 <section class="section-band">
+                    @php
+                        $featuredProject = $projects[0];
+                    @endphp
+
                     <div class="container about-grid">
                         <p class="eyebrow">The Philosophy</p>
                         <h2 class="statement">Balancing technical precision with visceral visual storytelling.</h2>
@@ -69,21 +73,27 @@
                         </p>
                     </div>
 
-                    <div class="container feature-grid">
-                        <div class="feature-image">
-                            <img src="{{ asset('images/portfolio_photography_gallery.png') }}" alt="Portfolio visual generatif">
-                            <span class="image-chip">Photography</span>
+                    <div class="container featured-project">
+                        <div class="featured-copy">
+                            <span class="eyebrow">Latest Project</span>
+                            <h2>{{ $featuredProject['title'] }}</h2>
+                            <p>
+                                Eksplorasi visual editorial yang menggabungkan struktur brand, komposisi foto,
+                                dan arah visual minimal untuk portfolio digital.
+                            </p>
+                            <a class="portfolio-button" href="{{ route('portfolio') }}">See Portfolio</a>
                         </div>
-                        <div class="side-stack">
-                            <article class="mini-project">
-                                <span class="eyebrow">01. Interactive</span>
-                                <h3>Generative Systems</h3>
-                            </article>
-                            <article class="mini-project dark">
-                                <span class="eyebrow">02. Architecture</span>
-                                <h3>Digital Structures</h3>
-                            </article>
-                        </div>
+
+                        <article class="featured-card">
+                            <div class="featured-media">
+                                <img src="{{ asset('images/'.$featuredProject['image']) }}" alt="{{ $featuredProject['title'] }}">
+                                <span class="pill">{{ $featuredProject['category'] }}</span>
+                            </div>
+                            <div class="featured-title-row">
+                                <h3>{{ strtoupper($featuredProject['title']) }}</h3>
+                                <a class="detail-link" href="{{ route('portfolio') }}">View Detail</a>
+                            </div>
+                        </article>
                     </div>
                 </section>
             @elseif ($page === 'portfolio')
@@ -110,12 +120,11 @@
                                 <img src="{{ asset('images/'.$project['image']) }}" alt="{{ $project['title'] }}">
                                 <div class="work-overlay">
                                     <span class="pill">{{ $project['category'] }}</span>
-                                    <a class="detail-arrow" href="#" aria-label="Lihat detail {{ $project['title'] }}">-></a>
                                 </div>
                             </div>
                             <div class="work-title-row">
                                 <h2>{{ strtoupper($project['title']) }}</h2>
-                                <a class="detail-link" href="#">View Detail</a>
+                                <a class="detail-link" href="{{ route('portfolio') }}">View Detail</a>
                             </div>
                         </article>
                     @endforeach
