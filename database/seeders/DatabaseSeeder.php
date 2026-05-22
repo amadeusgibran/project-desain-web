@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            ProfileSeeder::class,
             CategorySeeder::class,
             ProjectSeeder::class,
         ]);

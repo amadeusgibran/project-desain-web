@@ -39,3 +39,5 @@ Buka `http://127.0.0.1:8000`.
 - Password: `password`
 - Projects: `/admin/projects`
 - Categories: `/admin/categories`
+- Messages: `/admin/messages`
+- Profile: `/admin/profile`

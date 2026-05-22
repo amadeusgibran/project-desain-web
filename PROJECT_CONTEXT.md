@@ -24,7 +24,11 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 - `app/Models/Project.php`: Model Eloquent untuk seri foto portfolio.
 - `app/Http/Controllers/ProjectController.php`: CRUD admin untuk project.
 - `app/Http/Controllers/CategoryController.php`: CRUD ringan untuk kategori portfolio.
+- `app/Http/Controllers/ContactController.php`: Menyimpan pesan dari form contact.
+- `app/Http/Controllers/Admin/MessageController.php`: Inbox admin untuk pesan contact.
+- `app/Http/Controllers/Admin/ProfileController.php`: Form admin untuk edit profile settings.
 - `app/Http/Controllers/AuthController.php`: Login/logout admin manual.
+- `app/Services/ProfileSettings.php`: Service key-value profile dengan cache.
 - `app/Http/Requests`: Validasi form create/update project.
 - `resources/views/portfolio.blade.php`: View utama untuk halaman About, Portfolio, dan Contact.
 - `resources/js/app.js`: Logic karakter 3D, rotasi pointer, dan AI Assistant panel.
@@ -34,9 +38,10 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 
 ## Fitur Saat Ini
 1. Halaman About
-   - Menampilkan hero profile.
-   - Menampilkan visual interaktif.
-   - Menampilkan filosofi fotografi dan fokus karya.
+- Menampilkan hero profile.
+- Menampilkan visual interaktif.
+- Menampilkan filosofi fotografi dan fokus karya.
+- Data nama, role, bio, email, lokasi, availability, avatar, dan social links berasal dari tabel `profile_settings`.
 
 2. Halaman Portfolio
    - Menampilkan daftar seri foto.
@@ -46,8 +51,8 @@ Portfolio Gibran Studio adalah aplikasi web portfolio berbasis Laravel untuk fot
 
 3. Halaman Contact
    - Menampilkan email, social link, dan availability.
-   - Memiliki form kontak secara tampilan.
-   - Form belum terhubung ke route penyimpanan.
+   - Memiliki form kontak yang menyimpan pesan ke tabel `contact_messages`.
+   - Memakai validasi server-side, flash success, error inline, dan honeypot anti-spam dasar.
 
 4. AI Assistant Panel
    - Tombol AI Assistant membuka panel samping.
@@ -80,19 +85,20 @@ CRUD yang tersedia:
 - Slug project dibuat otomatis dari title.
 - Category dipilih dari dropdown dan dikelola lewat `/admin/categories`.
 - Gallery upload memakai multi-file dropzone dengan preview sebelum submit.
+- Inbox pesan contact tersedia di `/admin/messages` dengan filter read/unread, detail, mark as read otomatis, bulk mark read, dan bulk delete.
+- Profile settings tersedia di `/admin/profile` dan menyimpan data ke tabel `profile_settings`.
+- Avatar profile diupload ke `storage/app/public/profile`.
 
 ## Batasan Saat Ini
-- Data profile masih hardcoded.
-- Form contact belum menyimpan data.
 - Dashboard admin baru mengelola portfolio project.
 - Endpoint AI belum memakai provider AI eksternal.
-- CRUD belum mencakup profile, contact message, atau social links.
+- CRUD belum mencakup halaman About section lanjutan di luar key profile dasar.
 
 ## Arah Pengembangan
 Project ini dapat dikembangkan menjadi aplikasi portfolio dinamis dengan panel admin. Tahap pengembangan yang disarankan:
-1. Membuat penyimpanan pesan kontak.
-2. Memindahkan data profile ke database atau config.
-3. Membuat dashboard untuk mengelola profile dan pesan.
+1. Menambahkan email notification saat pesan contact masuk.
+2. Membuat pengelolaan konten About section yang lebih lengkap.
+3. Menambahkan preview avatar di halaman publik yang lebih natural.
 4. Menambahkan edit category dan proteksi hapus category yang sedang dipakai.
 5. Menambahkan role admin bila user lebih dari satu.
 6. Menghubungkan Profile Assistant ke data project yang lebih lengkap.
@@ -123,7 +129,9 @@ email: admin@example.com
 password: password
 projects: /admin/projects
 categories: /admin/categories
+messages: /admin/messages
+profile: /admin/profile
 ```
 
 ## Ringkasan Untuk Prompt AI
-Project ini adalah Laravel 12 portfolio fotografi bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan visual interaktif Three.js. Aplikasi memiliki halaman About, Portfolio, Detail Portfolio, Contact, panel Profile Assistant lokal melalui endpoint `/profile/ai-insight`, serta dashboard admin `/admin/projects` untuk CRUD seri foto. Data project berasal dari tabel `projects`; data profile masih hardcoded. Pengembangan berikutnya adalah CRUD profile, penyimpanan pesan kontak, dan role admin.
+Project ini adalah Laravel 12 portfolio fotografi bernama Portfolio Gibran Studio. Tampilan dibangun dengan Blade, Vite, Tailwind CSS 4, CSS custom, dan visual interaktif Three.js. Aplikasi memiliki halaman About, Portfolio, Detail Portfolio, Contact, panel Profile Assistant lokal melalui endpoint `/profile/ai-insight`, dashboard admin `/admin/projects` untuk CRUD seri foto, inbox `/admin/messages` untuk pesan contact, dan `/admin/profile` untuk edit profile settings. Data project berasal dari tabel `projects`; data profile berasal dari tabel `profile_settings` lewat service cache `ProfileSettings`. Pengembangan berikutnya adalah email notification, konten About lanjutan, dan role admin.

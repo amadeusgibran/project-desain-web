@@ -804,6 +804,25 @@ textarea {
     cursor: pointer;
 }
 
+.admin-sidebar nav a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.sidebar-count {
+    display: inline-grid;
+    min-width: 24px;
+    height: 24px;
+    place-items: center;
+    border-radius: 999px;
+    background: var(--terracotta);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+}
+
 .admin-sidebar nav a.active,
 .admin-sidebar nav a:hover,
 .admin-sidebar button:hover {
@@ -970,6 +989,112 @@ textarea {
     align-items: start;
 }
 
+.admin-filter-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-filter-tabs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.admin-filter-tabs a.active,
+.admin-filter-tabs a:hover {
+    border-color: var(--green);
+    color: var(--green-deep);
+}
+
+.admin-filter-tabs span {
+    color: var(--terracotta);
+}
+
+.bulk-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+}
+
+.bulk-actions select,
+.bulk-actions button {
+    border: 1px solid var(--line);
+    background: white;
+    padding: 10px 12px;
+    color: var(--green-deep);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.bulk-actions button {
+    background: var(--green);
+    color: white;
+    cursor: pointer;
+}
+
+.admin-pagination {
+    margin-top: 22px;
+    color: var(--muted);
+}
+
+.message-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 24px;
+}
+
+.message-detail-card {
+    display: grid;
+    gap: 28px;
+    padding: 28px;
+}
+
+.message-meta-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+}
+
+.message-meta-grid div {
+    display: grid;
+    gap: 8px;
+}
+
+.message-meta-grid strong {
+    overflow-wrap: anywhere;
+    font-family: var(--serif);
+    font-size: 24px;
+    line-height: 1.1;
+}
+
+.message-body {
+    color: var(--muted);
+    font-size: 24px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.message-nav-stack {
+    display: grid;
+    align-content: start;
+    gap: 18px;
+}
+
 .field-helper-link {
     color: var(--green-deep);
     font-size: 12px;
@@ -1096,6 +1221,33 @@ textarea {
     display: none;
 }
 
+.profile-settings-grid {
+    display: grid;
+    grid-template-columns: 0.65fr 0.35fr;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.profile-avatar-preview {
+    display: grid;
+    gap: 10px;
+}
+
+.profile-avatar-preview span {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.profile-avatar-preview img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border: 1px solid var(--line);
+}
+
 .admin-image-preview {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1161,6 +1313,23 @@ textarea {
     gap: 44px 48px;
 }
 
+.contact-success {
+    grid-column: 2;
+    padding: 18px 20px;
+    border: 1px solid #a9c9bf;
+    background: #e5f4ef;
+    color: var(--green-deep);
+    font-weight: 800;
+}
+
+.honeypot-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .field {
     display: grid;
     gap: 14px;
@@ -1176,6 +1345,12 @@ textarea {
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+}
+
+.field small {
+    color: var(--terracotta);
+    font-size: 12px;
+    font-weight: 800;
 }
 
 .field input,
@@ -1407,7 +1582,10 @@ textarea {
     .admin-image-preview,
     .admin-grid-two,
     .admin-media-grid,
-    .gallery-upload-preview {
+    .profile-settings-grid,
+    .gallery-upload-preview,
+    .message-detail-grid,
+    .message-meta-grid {
         grid-template-columns: 1fr;
     }
 
@@ -1422,7 +1600,8 @@ textarea {
 
     .field,
     .field.full,
-    .send-row {
+    .send-row,
+    .contact-success {
         grid-column: auto;
     }
 }

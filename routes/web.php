@@ -1,56 +1,70 @@
 <?php
 
+use App\Http\Controllers\Admin\MessageController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Models\Project;
+use App\Services\ProfileSettings;
 use Illuminate\Support\Facades\Route;
 
-$profile = [
+$profileDefaults = [
     'name' => 'Gibran Studio',
     'role' => 'photographer & visual storyteller',
+    'bio' => 'Saya memotret momen, ruang, dan karakter dengan pendekatan editorial yang bersih.',
     'email' => 'hello@gibranstudio.dev',
     'location' => 'Bandung, Indonesia',
     'availability' => 'Menerima sesi portrait, editorial, produk, dan dokumentasi visual untuk brand maupun personal.',
+    'social_linkedin' => '#',
+    'social_instagram' => '#',
+    'social_behance' => '#',
+    'avatar' => null,
 ];
 
-Route::get('/', function () use ($profile) {
+Route::get('/', function () use ($profileDefaults) {
     return view('portfolio', [
         'page' => 'about',
-        'profile' => $profile,
+        'profile' => app(ProfileSettings::class)->many($profileDefaults),
         'projects' => Project::published()->orderBy('order')->get(),
     ]);
 })->name('about');
 
-Route::get('/portfolio', function () use ($profile) {
+Route::get('/portfolio', function () use ($profileDefaults) {
     return view('portfolio', [
         'page' => 'portfolio',
-        'profile' => $profile,
+        'profile' => app(ProfileSettings::class)->many($profileDefaults),
         'projects' => Project::published()->orderBy('order')->get(),
     ]);
 })->name('portfolio');
 
-Route::get('/portfolio/{slug}', function (string $slug) use ($profile) {
+Route::get('/portfolio/{slug}', function (string $slug) use ($profileDefaults) {
     $projects = Project::published()->orderBy('order')->get();
     $index = $projects->search(fn (Project $project) => $project->slug === $slug);
 
     abort_if($index === false, 404);
 
     return view('portfolio-detail', [
-        'profile' => $profile,
+        'profile' => app(ProfileSettings::class)->many($profileDefaults),
         'project' => $projects[$index],
         'previousProject' => $index > 0 ? $projects[$index - 1] : null,
         'nextProject' => $index < $projects->count() - 1 ? $projects[$index + 1] : null,
     ]);
 })->name('portfolio.detail');
 
-Route::get('/contact', fn () => view('portfolio', [
-    'page' => 'contact',
-    'profile' => $profile,
-    'projects' => Project::published()->orderBy('order')->get(),
-]))->name('contact');
+Route::get('/contact', function () use ($profileDefaults) {
+    return view('portfolio', [
+        'page' => 'contact',
+        'profile' => app(ProfileSettings::class)->many($profileDefaults),
+        'projects' => Project::published()->orderBy('order')->get(),
+    ]);
+})->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-Route::get('/profile/ai-insight', function () use ($profile) {
+Route::get('/profile/ai-insight', function () use ($profileDefaults) {
+    $profile = app(ProfileSettings::class)->many($profileDefaults);
+
     return response()->json([
         'source' => 'Studio profile context',
         'summary' => "{$profile['name']} cocok diposisikan sebagai {$profile['role']} dengan pendekatan editorial, tenang, dan kuat secara komposisi.",
@@ -67,6 +81,10 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/messages/bulk', [MessageController::class, 'bulk'])->name('messages.bulk');
+    Route::resource('messages', MessageController::class)->only(['index', 'show', 'destroy']);
     Route::post('/projects/reorder', [ProjectController::class, 'reorder'])->name('projects.reorder');
     Route::resource('projects', ProjectController::class)->except(['show']);
     Route::resource('categories', CategoryController::class)->only(['index', 'store', 'destroy']);

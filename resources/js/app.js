@@ -231,3 +231,14 @@ if (galleryInput && galleryPreview && galleryDropzone) {
         addGalleryFiles(event.dataTransfer.files);
     });
 }
+
+const checkAll = document.querySelector('[data-check-all]');
+const messageChecks = document.querySelectorAll('[data-message-check]');
+
+if (checkAll && messageChecks.length) {
+    checkAll.addEventListener('change', () => {
+        messageChecks.forEach((checkbox) => {
+            checkbox.checked = checkAll.checked;
+        });
+    });
+}

@@ -11,8 +11,16 @@
         <aside class="admin-sidebar">
             <a class="admin-brand" href="{{ route('admin.projects.index') }}">Gibran Studio</a>
             <nav>
+                <a class="{{ request()->routeIs('admin.profile.*') ? 'active' : '' }}" href="{{ route('admin.profile.edit') }}">Profile</a>
                 <a class="{{ request()->routeIs('admin.projects.*') ? 'active' : '' }}" href="{{ route('admin.projects.index') }}">Projects</a>
                 <a class="{{ request()->routeIs('admin.categories.*') ? 'active' : '' }}" href="{{ route('admin.categories.index') }}">Categories</a>
+                <a class="{{ request()->routeIs('admin.messages.*') ? 'active' : '' }}" href="{{ route('admin.messages.index') }}">
+                    Messages
+                    @php($unreadMessages = \App\Models\ContactMessage::unread()->count())
+                    @if ($unreadMessages > 0)
+                        <span class="sidebar-count">{{ $unreadMessages }}</span>
+                    @endif
+                </a>
                 <a href="{{ route('portfolio') }}" target="_blank" rel="noreferrer">View Site</a>
             </nav>
             <form method="post" action="{{ route('admin.logout') }}">

@@ -43,7 +43,7 @@
                         <h1 class="hero-title">I am a photographer &amp; <span>visual storyteller</span></h1>
                     </div>
                     <div class="character-stage" aria-label="Visual portrait interaktif">
-                        <img src="{{ asset('images/about_me_3d_character.png') }}" alt="">
+                        <img src="{{ ! empty($profile['avatar']) ? Storage::url($profile['avatar']) : asset('images/about_me_3d_character.png') }}" alt="">
                         <canvas id="character-canvas"></canvas>
                         <div class="drag-note">DRAG TO EXPLORE</div>
                     </div>
@@ -59,8 +59,7 @@
                         <p class="eyebrow">The Philosophy</p>
                         <h2 class="statement">Finding quiet emotion through light, texture, and composition.</h2>
                         <p class="copy">
-                            Saya memotret momen, ruang, dan karakter dengan pendekatan editorial yang bersih.
-                            Setiap frame diarahkan agar terasa tenang, jujur, dan punya narasi visual.
+                            {{ $profile['bio'] }}
                         </p>
                         <p></p>
                         <p class="copy">
@@ -144,9 +143,9 @@
 
                         <span class="eyebrow">Social</span>
                         <div class="social-list">
-                            <a href="#">LinkedIn</a>
-                            <a href="#">Instagram</a>
-                            <a href="#">Behance</a>
+                            <a href="{{ $profile['social_linkedin'] ?: '#' }}">LinkedIn</a>
+                            <a href="{{ $profile['social_instagram'] ?: '#' }}">Instagram</a>
+                            <a href="{{ $profile['social_behance'] ?: '#' }}">Behance</a>
                         </div>
 
                         <div class="availability">
@@ -155,27 +154,42 @@
                         </div>
                     </aside>
 
-                    <form class="contact-form" action="#" method="post">
+                    @if (session('contact_status'))
+                        <div class="contact-success">
+                            {{ session('contact_status') }}
+                        </div>
+                    @endif
+
+                    <form class="contact-form" action="{{ route('contact.store') }}" method="post">
                         @csrf
+                        <div class="honeypot-field" aria-hidden="true">
+                            <label for="website">Website</label>
+                            <input id="website" name="website" tabindex="-1" autocomplete="off" value="{{ old('website') }}">
+                        </div>
                         <div class="field">
                             <label for="name">Name</label>
-                            <input id="name" name="name" value="John Doe">
+                            <input id="name" name="name" value="{{ old('name') }}" required>
+                            @error('name')<small>{{ $message }}</small>@enderror
                         </div>
                         <div class="field">
                             <label for="email">Email</label>
-                            <input id="email" name="email" type="email" value="john@example.com">
+                            <input id="email" name="email" type="email" value="{{ old('email') }}" required>
+                            @error('email')<small>{{ $message }}</small>@enderror
                         </div>
                         <div class="field full">
-                            <label for="type">Inquiry Type</label>
-                            <select id="type" name="type">
-                                <option>Portrait Session</option>
-                                <option>Editorial Photography</option>
-                                <option>Brand Documentation</option>
+                            <label for="subject">Inquiry Type</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select inquiry</option>
+                                @foreach (['Portrait Session', 'Editorial Photography', 'Brand Documentation'] as $subject)
+                                    <option value="{{ $subject }}" @selected(old('subject') === $subject)>{{ $subject }}</option>
+                                @endforeach
                             </select>
+                            @error('subject')<small>{{ $message }}</small>@enderror
                         </div>
                         <div class="field full">
                             <label for="message">Message</label>
-                            <textarea id="message" name="message">Tell me about your project...</textarea>
+                            <textarea id="message" name="message" required>{{ old('message') }}</textarea>
+                            @error('message')<small>{{ $message }}</small>@enderror
                         </div>
                         <div class="send-row">
                             <button class="send-button" type="submit">SEND MESSAGE -></button>
