@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $project->title }} | {{ $profile['name'] }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -25,14 +26,17 @@
             <div class="ai-card-head">
                 <div class="ai-badge">AI</div>
                 <div>
-                    <strong>PROFILE ASSISTANT</strong>
-                    <small data-ai-source>Studio profile context</small>
+                    <strong>PORTFOLIO CHAT</strong>
+                    <small data-ai-source>Profile and project context</small>
                 </div>
             </div>
-            <div class="ai-body">
-                <blockquote data-ai-summary>Tekan refresh untuk membaca insight profile.</blockquote>
-                <p data-ai-suggestion>Insight singkat tentang arah visual dan positioning portfolio.</p>
-                <button type="button" data-ai-refresh>Refresh Insight</button>
+            <div class="ai-body" data-ai-body>
+                <div class="ai-messages" data-ai-messages aria-live="polite"></div>
+                <form class="ai-chat-form" data-ai-form>
+                    <label class="sr-only" for="ai-message-detail">Tulis pertanyaan untuk portfolio assistant</label>
+                    <textarea id="ai-message-detail" data-ai-input rows="2" maxlength="1000" placeholder="Tanya soal portfolio, layanan, atau cara booking..." required></textarea>
+                    <button type="submit" data-ai-send>Send</button>
+                </form>
             </div>
         </aside>
 

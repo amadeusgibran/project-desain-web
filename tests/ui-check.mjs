@@ -47,7 +47,10 @@ try {
 
     await page.getByRole('button', { name: /ai assistant/i }).click();
     await page.waitForSelector('[data-ai-panel].open');
-    await page.waitForSelector('text=Laravel Boost');
+    await page.waitForSelector('text=Halo, saya bisa bantu menjelaskan portfolio');
+    await page.fill('[data-ai-input]', 'Layanan apa saja yang tersedia?');
+    await page.click('[data-ai-send]');
+    await page.waitForSelector('text=Assistant belum terhubung penuh ke AI');
 
     await page.goto('http://127.0.0.1:8000/portfolio', { waitUntil: 'networkidle' });
     await page.waitForSelector('text=Capturing the');

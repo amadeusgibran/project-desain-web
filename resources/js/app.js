@@ -98,42 +98,125 @@ if (canvas) {
 
 const aiToggle = document.querySelector('[data-ai-toggle]');
 const aiPanel = document.querySelector('[data-ai-panel]');
-const aiRefresh = document.querySelector('[data-ai-refresh]');
-const aiSummary = document.querySelector('[data-ai-summary]');
-const aiSuggestion = document.querySelector('[data-ai-suggestion]');
-const aiSource = document.querySelector('[data-ai-source]');
+const aiMessages = document.querySelector('[data-ai-messages]');
+const aiForm = document.querySelector('[data-ai-form]');
+const aiInput = document.querySelector('[data-ai-input]');
+const aiSend = document.querySelector('[data-ai-send]');
+const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+const chatStorageKey = 'gibran-portfolio-chat';
+const welcomeMessage = {
+    role: 'assistant',
+    content: 'Halo, saya bisa bantu menjelaskan portfolio, layanan, availability, dan cara kontak Gibran Studio.',
+};
 
-const loadProfileInsight = async () => {
-    if (!aiSummary) return;
+let chatHistory = [];
+let isChatLoading = false;
 
-    aiSummary.textContent = 'Membaca konteks profile...';
-    aiSuggestion.textContent = '';
-
+const loadChatHistory = () => {
     try {
-        const response = await fetch('/profile/ai-insight', {
-            headers: { Accept: 'application/json' },
-        });
-        const insight = await response.json();
-
-        aiSource.textContent = insight.source;
-        aiSummary.textContent = insight.summary;
-        aiSuggestion.textContent = insight.suggestion;
+        const stored = JSON.parse(sessionStorage.getItem(chatStorageKey) || '[]');
+        chatHistory = Array.isArray(stored) && stored.length ? stored : [welcomeMessage];
     } catch {
-        aiSource.textContent = 'Local fallback';
-        aiSummary.textContent = 'Profile siap tampil sebagai photographer dengan bahasa visual editorial.';
-        aiSuggestion.textContent = 'Cek koneksi dev server jika insight studio gagal dimuat.';
+        chatHistory = [welcomeMessage];
     }
+};
+
+const saveChatHistory = () => {
+    sessionStorage.setItem(chatStorageKey, JSON.stringify(chatHistory.slice(-12)));
+};
+
+const renderChatHistory = () => {
+    if (!aiMessages) return;
+
+    aiMessages.innerHTML = '';
+
+    chatHistory.forEach((message) => {
+        const bubble = document.createElement('div');
+        bubble.className = `ai-message ${message.role === 'user' ? 'user' : 'assistant'}`;
+        bubble.textContent = message.content;
+        aiMessages.append(bubble);
+    });
+
+    aiMessages.scrollTop = aiMessages.scrollHeight;
+};
+
+const setChatLoading = (loading) => {
+    isChatLoading = loading;
+
+    if (aiInput) aiInput.disabled = loading;
+    if (aiSend) aiSend.disabled = loading;
+};
+
+const askPortfolioAssistant = async (message) => {
+    const payloadHistory = chatHistory
+        .filter((item) => item.role === 'user' || item.role === 'assistant')
+        .slice(0, -2)
+        .slice(-8);
+
+    const response = await fetch('/profile/chat', {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            ...(csrfToken ? { 'X-CSRF-TOKEN': csrfToken } : {}),
+        },
+        body: JSON.stringify({
+            message,
+            history: payloadHistory,
+        }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Chat request failed.');
+    }
+
+    return response.json();
 };
 
 if (aiToggle && aiPanel) {
     aiToggle.addEventListener('click', () => {
         aiPanel.classList.toggle('open');
-        loadProfileInsight();
+        loadChatHistory();
+        renderChatHistory();
+        aiInput?.focus();
     });
 }
 
-if (aiRefresh) {
-    aiRefresh.addEventListener('click', loadProfileInsight);
+if (aiForm && aiInput) {
+    loadChatHistory();
+    renderChatHistory();
+
+    aiForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const message = aiInput.value.trim();
+        if (!message || isChatLoading) return;
+
+        chatHistory.push({ role: 'user', content: message });
+        chatHistory.push({ role: 'assistant', content: 'Membaca konteks portfolio...' });
+        aiInput.value = '';
+        setChatLoading(true);
+        renderChatHistory();
+
+        try {
+            const result = await askPortfolioAssistant(message);
+            chatHistory[chatHistory.length - 1] = {
+                role: 'assistant',
+                content: result.reply || 'Maaf, assistant belum bisa menjawab saat ini.',
+            };
+        } catch {
+            chatHistory[chatHistory.length - 1] = {
+                role: 'assistant',
+                content: 'Maaf, koneksi assistant sedang bermasalah. Silakan coba lagi atau buka halaman Contact untuk menghubungi studio.',
+            };
+        } finally {
+            chatHistory = chatHistory.slice(-12);
+            saveChatHistory();
+            setChatLoading(false);
+            renderChatHistory();
+            aiInput.focus();
+        }
+    });
 }
 
 const filterTabs = document.querySelectorAll('[data-filter]');

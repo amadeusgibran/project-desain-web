@@ -7,7 +7,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProjectController;
 use App\Models\Project;
+use App\Services\PortfolioChatAssistant;
 use App\Services\ProfileSettings;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 $profileDefaults = [
@@ -71,6 +73,23 @@ Route::get('/profile/ai-insight', function () use ($profileDefaults) {
         'suggestion' => 'Tonjolkan seri foto terbaik di halaman pertama, lalu arahkan pengunjung ke koleksi portfolio dan kontak.',
     ]);
 })->name('profile.ai');
+
+Route::post('/profile/chat', function (Request $request, PortfolioChatAssistant $assistant) use ($profileDefaults) {
+    $validated = $request->validate([
+        'message' => ['required', 'string', 'max:1000'],
+        'history' => ['sometimes', 'array', 'max:8'],
+        'history.*.role' => ['required_with:history', 'string', 'in:user,assistant'],
+        'history.*.content' => ['required_with:history', 'string', 'max:1000'],
+    ]);
+
+    return response()->json([
+        'reply' => $assistant->reply(
+            $validated['message'],
+            $validated['history'] ?? [],
+            $profileDefaults
+        ),
+    ]);
+})->name('profile.chat');
 
 Route::get('/login', fn () => redirect()->route('admin.login'))->name('login');
 
