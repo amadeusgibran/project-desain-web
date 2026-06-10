@@ -82,7 +82,7 @@
         <label class="cover-upload-card">
             <span>COVER IMAGE</span>
             <strong data-cover-file-name>{{ $project->exists ? 'REPLACE COVER IMAGE' : 'CHOOSE COVER IMAGE' }}</strong>
-            <small>JPG, PNG, or WEBP. Max 4MB.</small>
+            <small>JPG, PNG, or WEBP. Max 100MB.</small>
             <input name="cover_image" type="file" accept="image/*" @if (! $project->exists) required @endif data-cover-input>
             @error('cover_image')<small>{{ $message }}</small>@enderror
         </label>
@@ -91,7 +91,7 @@
             <span>GALLERY IMAGES</span>
             <label class="gallery-dropzone" for="gallery-images">
                 <strong>DROP PHOTOS HERE OR CLICK TO BROWSE</strong>
-                <small>UPLOAD MULTIPLE JPG, PNG, OR WEBP FILES. CLICK X ON PREVIEW TO REMOVE BEFORE SUBMIT.</small>
+                <small>UPLOAD MULTIPLE JPG, PNG, OR WEBP FILES (MAX 100MB PER FILE). CLICK X ON PREVIEW TO REMOVE BEFORE SUBMIT.</small>
                 <input id="gallery-images" name="images[]" type="file" accept="image/*" multiple data-gallery-input>
             </label>
             <div class="gallery-upload-preview" data-gallery-preview></div>
