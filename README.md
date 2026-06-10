@@ -1,9 +1,9 @@
 # Portfolio Gibran Studio
 
 ## Identitas Mahasiswa
-- **Nama:** Gibran
-- **NIM:** Isi NIM kamu
-- **Kelas:** Isi kelas kamu
+- **Nama:** Gibran Amadeus Jastin
+- **NRP:** 5124500017
+- **Kelas:** D3 MMB A
 
 ## Deskripsi
 Project Laravel portfolio fotografi editorial dengan halaman About, Portfolio, Contact, detail portfolio, panel profile assistant, dan visual interaktif.
@@ -15,9 +15,6 @@ Project Laravel portfolio fotografi editorial dengan halaman About, Portfolio, C
 - Tailwind CSS 4
 - Three.js
 - Laravel Boost
-
-## Catatan AI
-Laravel AI SDK terbaru (`laravel/ai` v0.7.0) membutuhkan PHP `^8.3`. Mesin ini memakai PHP `8.2.12`, jadi package itu belum bisa dipasang. Project ini memakai package AI resmi Laravel yang kompatibel, yaitu `laravel/boost`, dan menyediakan endpoint `/profile/ai-insight` untuk panel AI profile.
 
 ## Cara Menjalankan
 ```bash
