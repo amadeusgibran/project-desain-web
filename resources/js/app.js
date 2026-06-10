@@ -106,7 +106,7 @@ const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
 const chatStorageKey = 'gibran-portfolio-chat';
 const welcomeMessage = {
     role: 'assistant',
-    content: 'Halo, saya bisa bantu menjelaskan portfolio, layanan, availability, dan cara kontak Gibran Studio.',
+    content: 'Halo, saya bisa bantu menjelaskan portfolio, layanan, availability, dan cara kontak Gibran Amadeus.',
 };
 
 let chatHistory = [];

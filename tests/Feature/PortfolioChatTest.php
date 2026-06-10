@@ -57,8 +57,7 @@ class PortfolioChatTest extends TestCase
                         'type' => 'message',
                         'content' => [
                             [
-                                'type' => 'output_text',
-                                'text' => 'Gibran Studio tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.',
+                                'text' => 'Gibran Amadeus tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.',
                             ],
                         ],
                     ],
@@ -74,7 +73,7 @@ class PortfolioChatTest extends TestCase
             ],
         ])
             ->assertOk()
-            ->assertJsonPath('reply', 'Gibran Studio tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.');
+            ->assertJsonPath('reply', 'Gibran Amadeus tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.');
 
         Http::assertSent(fn ($request): bool => $request->url() === 'https://api.openai.com/v1/responses'
             && $request['model'] === 'gpt-5.4-mini'
@@ -147,7 +146,7 @@ class PortfolioChatTest extends TestCase
                     [
                         'content' => [
                             'parts' => [
-                                ['text' => 'Gibran Studio tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.'],
+                                ['text' => 'Gibran Amadeus tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.'],
                             ],
                             'role' => 'model',
                         ],
@@ -164,7 +163,7 @@ class PortfolioChatTest extends TestCase
             ],
         ])
             ->assertOk()
-            ->assertJsonPath('reply', 'Gibran Studio tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.');
+            ->assertJsonPath('reply', 'Gibran Amadeus tersedia untuk portrait, editorial, arsitektur, dan dokumentasi brand.');
 
         Http::assertSent(fn ($request): bool => str_contains($request->url(), 'generativelanguage.googleapis.com')
             && str_contains($request->url(), 'key=test-gemini-key')

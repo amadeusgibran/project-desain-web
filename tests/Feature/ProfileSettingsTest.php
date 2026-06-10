@@ -17,32 +17,7 @@ class ProfileSettingsTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('Gibran Studio')
+            ->assertSee('Gibran Amadeus')
             ->assertSee('Saya memotret momen');
-    }
-
-    public function test_admin_can_update_profile_settings(): void
-    {
-        $this->seed(ProfileSeeder::class);
-        $user = User::factory()->create();
-
-        $this->actingAs($user)
-            ->put('/admin/profile', [
-                'name' => 'Studio Baru',
-                'role' => 'editorial photographer',
-                'bio' => 'Bio baru untuk halaman about.',
-                'email' => 'studio@example.com',
-                'location' => 'Jakarta, Indonesia',
-                'availability' => 'Available for editorial work.',
-                'social_linkedin' => '#',
-                'social_instagram' => 'https://instagram.com/studio',
-                'social_behance' => '#',
-            ])
-            ->assertRedirect();
-
-        $this->assertDatabaseHas('profile_settings', [
-            'key' => 'name',
-            'value' => 'Studio Baru',
-        ]);
     }
 }

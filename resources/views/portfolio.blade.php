@@ -44,7 +44,7 @@
             @if ($page === 'about')
                 <section class="hero container">
                     <div>
-                        <h1 class="hero-title">I am a photographer &amp; <span>visual storyteller</span></h1>
+                        <h1 class="hero-title">I am a photographer &amp; <span>graphic desainer</span></h1>
                     </div>
                     <div class="character-stage" aria-label="Visual portrait interaktif">
                         <img src="{{ ! empty($profile['avatar']) ? Storage::url($profile['avatar']) : asset('images/about_me_3d_character.png') }}" alt="">

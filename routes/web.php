@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\MessageController;
-use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
@@ -13,11 +12,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 $profileDefaults = [
-    'name' => 'Gibran Studio',
-    'role' => 'photographer & visual storyteller',
+    'name' => 'Gibran Amadeus',
+    'role' => 'photographer & graphic desainer',
     'bio' => 'Saya memotret momen, ruang, dan karakter dengan pendekatan editorial yang bersih.',
-    'email' => 'hello@gibranstudio.dev',
-    'location' => 'Bandung, Indonesia',
+    'email' => 'gibran.amadeus06@gmail.com',
+    'location' => 'Surabaya, Indonesia',
     'availability' => 'Menerima sesi portrait, editorial, produk, dan dokumentasi visual untuk brand maupun personal.',
     'social_linkedin' => '#',
     'social_instagram' => '#',
@@ -100,8 +99,6 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/messages/bulk', [MessageController::class, 'bulk'])->name('messages.bulk');
     Route::resource('messages', MessageController::class)->only(['index', 'show', 'destroy']);
     Route::post('/projects/reorder', [ProjectController::class, 'reorder'])->name('projects.reorder');

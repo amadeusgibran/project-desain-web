@@ -10,11 +10,11 @@ class ProfileSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            'name' => 'Gibran Studio',
-            'role' => 'photographer & visual storyteller',
+            'name' => 'Gibran Amadeus',
+            'role' => 'photographer & graphic desainer',
             'bio' => 'Saya memotret momen, ruang, dan karakter dengan pendekatan editorial yang bersih.',
-            'email' => 'hello@gibranstudio.dev',
-            'location' => 'Bandung, Indonesia',
+            'email' => 'gibran.amadeus06@gmail.com',
+            'location' => 'Surabaya, Indonesia',
             'availability' => 'Menerima sesi portrait, editorial, produk, dan dokumentasi visual untuk brand maupun personal.',
             'social_linkedin' => '#',
             'social_instagram' => '#',
