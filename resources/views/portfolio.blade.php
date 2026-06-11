@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $profile['name'] }} | Portfolio</title>
     <script>
-        window.avatarModelUrl = "{{ asset('3d/avatar.glb') }}";
+        window.avatarModelUrl = "/3d/avatar.glb";
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
