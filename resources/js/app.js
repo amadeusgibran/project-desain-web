@@ -1,5 +1,6 @@
 import './bootstrap';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const canvas = document.querySelector('#character-canvas');
 
@@ -14,41 +15,57 @@ if (canvas) {
     camera.position.set(0, 1.2, 7);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    const silver = new THREE.MeshStandardMaterial({
-        color: 0x5f6765,
-        metalness: 0.86,
-        roughness: 0.28,
-    });
+    // Load the GLTF/GLB Avatar model
+    const loader = new GLTFLoader();
+    const modelUrl = window.avatarModelUrl || '/3d/avatar.glb';
 
-    const darkSilver = new THREE.MeshStandardMaterial({
-        color: 0x252827,
-        metalness: 0.75,
-        roughness: 0.34,
-    });
+    loader.load(
+        modelUrl,
+        (gltf) => {
+            const model = gltf.scene;
 
-    const accent = new THREE.MeshStandardMaterial({
-        color: 0x0f685a,
-        metalness: 0.58,
-        roughness: 0.22,
-    });
+            // Auto-scale and center the avatar model so it fits the scene nicely
+            const box = new THREE.Box3().setFromObject(model);
+            const size = box.getSize(new THREE.Vector3());
+            const center = box.getCenter(new THREE.Vector3());
 
-    const addMesh = (geometry, material, position, scale = [1, 1, 1], rotation = [0, 0, 0]) => {
-        const mesh = new THREE.Mesh(geometry, material);
-        mesh.position.set(...position);
-        mesh.scale.set(...scale);
-        mesh.rotation.set(...rotation);
-        character.add(mesh);
-        return mesh;
-    };
+            // Target height for the model inside our viewport (larger size)
+            const targetHeight = 3.8;
+            const scaleFactor = targetHeight / (size.y || 1);
+            model.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
-    addMesh(new THREE.SphereGeometry(0.46, 48, 32), silver, [0, 1.92, 0], [0.9, 1.08, 0.82]);
-    addMesh(new THREE.CapsuleGeometry(0.56, 1.26, 24, 48), silver, [0, 0.78, 0], [1, 1.02, 0.72]);
-    addMesh(new THREE.TorusGeometry(0.5, 0.035, 12, 72), accent, [0, 1.4, 0.02], [1, 0.35, 1], [0.05, 0, 0]);
-    addMesh(new THREE.CapsuleGeometry(0.13, 1.15, 16, 32), silver, [-0.7, 0.72, 0], [1, 1, 1], [0.18, 0, 0.42]);
-    addMesh(new THREE.CapsuleGeometry(0.13, 1.15, 16, 32), silver, [0.7, 0.72, 0], [1, 1, 1], [0.18, 0, -0.42]);
-    addMesh(new THREE.CapsuleGeometry(0.15, 1.3, 16, 32), darkSilver, [-0.34, -0.52, 0.05], [1, 1, 1], [0, 0, 0.14]);
-    addMesh(new THREE.CapsuleGeometry(0.15, 1.3, 16, 32), darkSilver, [0.34, -0.52, 0.05], [1, 1, 1], [0, 0, -0.14]);
-    addMesh(new THREE.TorusGeometry(1.2, 0.075, 18, 96), darkSilver, [0, -1.15, 0], [1, 0.28, 1], [0.1, 0, 0]);
+            // Align bottom of the avatar (min.y) to a raised Y position (Y = -0.5)
+            // Center the avatar along X and Z axes
+            const avatarY = -0.5;
+            model.position.set(
+                -center.x * scaleFactor,
+                avatarY - (box.min.y * scaleFactor),
+                -center.z * scaleFactor
+            );
+
+            // Traverse the model to adjust material properties if necessary
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    if (child.material) {
+                        child.material.depthWrite = true;
+                        // Avoid complete roughness or metallic reflections drowning out colors
+                        if (child.material.roughness !== undefined) {
+                            child.material.roughness = Math.max(child.material.roughness, 0.25);
+                        }
+                    }
+                }
+            });
+
+            character.add(model);
+
+            // Mark stage as loaded to hide fallback background and make it transparent
+            stage.classList.add('js-loaded');
+        },
+        undefined,
+        (error) => {
+            console.error('Error loading avatar GLB model:', error);
+        }
+    );
 
     character.rotation.y = -0.36;
     scene.add(character);
